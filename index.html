@@ -1,3 +1,63 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>中国人 Wiki · 静态知识库</title><link rel="stylesheet" href="style.css"></head><body>
-<header class="hero"><div class="hero-inner"><div class="eyebrow">STATIC KNOWLEDGE ARCHIVE</div><h1>中国人 Wiki</h1><div class="search-box"><label for="search">搜索词条</label><input id="search" type="search" autocomplete="off" placeholder="输入关键词，支持模糊匹配…"><label><input id="exact" type="checkbox">精确</label><select id="sort"><option value="relevance">相关度</option><option value="title">标题拼音/字序</option><option value="length">词条长度</option><option value="date">录入日期</option></select><select id="tag-filter"><option value="">全部分类</option></select><span id="search-count"></span></div></div></header>
-<main class="home-wrap"><section class="intro"><div><span class="eyebrow">ARCHIVE INDEX</span><h2>内容目录</h2><p>共收录 <b>3,333</b> 篇去重后的词条。搜索会同时匹配标题、来源和正文摘要。</p></div><div class="legend">不包含留言、评论区、讨论页与留言板</div></section><section id="results" class="results"><div class="result-head"><h2>全部词条</h2><span id="result-status">按标题排序</span></div><div id="result-list" class="result-list"></div></section></main><footer></footer><script src="app.js"></script></body></html>
+<!DOCTYPE html>
+<html lang="zh-CN">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width,initial-scale=1" name="viewport"/>
+  <title>
+   中国人 Wiki
+  </title>
+  <link href="style.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <header class="hero">
+   <div class="hero-inner">
+    <h1>
+     中国人 Wiki
+    </h1>
+    <div class="search-box">
+     <label for="search">
+      搜索词条
+     </label>
+     <input autocomplete="off" id="search" placeholder="输入关键词，支持模糊匹配&hellip;" type="search"/>
+     <label>
+      <input id="exact" type="checkbox"/>
+      精确
+     </label>
+     <select id="sort">
+      <option value="relevance">
+       相关度
+      </option>
+      <option value="title">
+       标题拼音/字序
+      </option>
+      <option value="length">
+       词条长度
+      </option>
+      <option value="date">
+       录入日期
+      </option>
+     </select>
+     <select id="tag-filter">
+      <option value="">
+       全部分类
+      </option>
+     </select>
+     <span id="search-count">
+     </span>
+    </div>
+   </div>
+  </header>
+ <main class="home-wrap">
+  <p><a class="source-card" href="media.html">媒体资源库：浏览和检索站内图片、视频、音频及附件</a></p>
+   <section class="results" id="results">
+    <div class="result-list" id="result-list">
+    </div>
+   </section>
+  </main>
+  <footer>
+  </footer>
+  <script src="app.js">
+  </script>
+ </body>
+</html>
+

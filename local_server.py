@@ -2,6 +2,7 @@ from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 from pathlib import Path
 from urllib.parse import urlparse, parse_qs
 import json, shutil, re
+import base64
 
 ROOT = Path(__file__).resolve().parent
 META = ROOT / "metadata.json"
@@ -61,6 +62,12 @@ class Handler(SimpleHTTPRequestHandler):
             trash = ROOT / ".trash"; trash.mkdir(exist_ok=True); src = ROOT / "pages" / old["slug"]
             if src.exists(): shutil.move(str(src), str(trash / src.name))
             write_meta([x for x in items if x["slug"] != old["slug"]]); return self.send_json({"ok":True})
+        if path == "/api/media/upload":
+            name = re.sub(r"[^\w\u4e00-\u9fff.()-]+", "-", data.get("name", "upload.bin")).strip("-") or "upload.bin"
+            target = ROOT / "assets" / "uploads" / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(base64.b64decode(data.get("content", "")))
+            return self.send_json({"ok": True, "path": "assets/uploads/" + name})
         return self.send_json({"error":"unknown endpoint"}, 404)
     def send_json(self, obj, status=200):
         raw=json.dumps(obj, ensure_ascii=False).encode(); self.send_response(status); self.send_header("Content-Type","application/json; charset=utf-8"); self.send_header("Content-Length",str(len(raw))); self.end_headers(); self.wfile.write(raw)
