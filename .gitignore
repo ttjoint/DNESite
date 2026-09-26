@@ -1,0 +1,21 @@
+# 垃圾桶与缓存目录
+.trash/
+__pycache__/
+
+# Python 字节码与编译文件
+*.py[cod]
+*$py.class
+
+# 虚拟环境 (Virtual Environments)
+.venv/
+venv/
+env/
+
+# 打包与构建输出
+build/
+dist/
+*.egg-info/
+
+# Pytest / 覆盖率等测试缓存
+.pytest_cache/
+.coverage

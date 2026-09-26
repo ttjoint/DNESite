@@ -20,6 +20,8 @@ def wiki_html(source):
     s = re.sub(r"\[\[([^\]|]+)(?:\|([^\]]+))?\]\]", lambda m: '<a href="#">'+(m.group(2) or m.group(1))+'</a>', s)
     return "\n".join("<p>" + x.replace("\n", "<br>") + "</p>" for x in re.split(r"\n\s*\n", s) if x.strip())
 def page_html(item, body):
+    if not re.search(r"<\/?[a-z][^>]*>", body or "", re.I):
+        body = wiki_html(body)
     return f'''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{esc(item['title'])} · 中国人Wiki</title><link rel="stylesheet" href="../style.css"></head><body><header class="site-header"><a class="brand" href="../index.html">中国人Wiki</a><a class="back" href="../index.html">返回目录</a><a class="edit-link" href="../admin.html?slug={item['slug']}">编辑</a></header><main class="page-wrap"><article class="article"><h1>{esc(item['title'])}</h1><div class="entry-info"><span>录入：{esc(item.get('date',''))}</span><span>{' '.join('#'+esc(t) for t in item.get('tags',[]))}</span></div><div class="article-body">{body}</div></article></main><script src="../app.js"></script></body></html>'''
 class Handler(SimpleHTTPRequestHandler):
     def end_headers(self):
