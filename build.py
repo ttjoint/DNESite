@@ -13,6 +13,12 @@ from xml.etree import ElementTree as ET
 
 from bs4 import BeautifulSoup, Comment
 
+try:
+    # Keep one MediaWiki implementation for the importer and local editor.
+    from local_server import wiki_html as render_mediawiki
+except ImportError:  # pragma: no cover - build can still run in a minimal env
+    render_mediawiki = None
+
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = Path(__file__).resolve().parent
@@ -146,6 +152,8 @@ def normalise_html(source: str, base: Path, raw: str, asset_cache: dict[str, str
 
 
 def wiki_to_html(text: str) -> str:
+    if render_mediawiki:
+        return render_mediawiki(text, link_prefix="../")
     text = html.escape(text or "")
     text = re.sub(r"^={2,6}\s*(.*?)\s*={2,6}$", r"<h2>\1</h2>", text, flags=re.M)
     text = re.sub(r"'''(.*?)'''", r"<strong>\1</strong>", text)

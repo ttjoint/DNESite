@@ -18,8 +18,23 @@ NewSite/
 ├─ admin.css           # 管理界面样式
 ├─ local_server.py     # 本地文件读写 API
 ├─ build.py            # 从原始镜像重新构建站点
+├─ convert_simple.py    # 将可安全转换的 HTML 词条转为 MediaWiki 源码
 └─ upgrade_site.py     # 生成标签和录入日期元数据
 ```
+
+## MediaWiki 源码支持
+
+管理端编辑器保存的是 MediaWiki 风格源码，预览和保存页面使用同一个解析器。当前覆盖词条中最常用的语法：
+
+- `== 标题 ==` 至 `====== 六级标题 ======`，并自动生成可跳转的 `section-...` 锚点
+- `'''粗体'''`、`''斜体''`、`'''''粗斜体'''''`、`----`、`*`/`#` 列表
+- `[[词条]]`、`[[词条|显示文字]]`、带章节的词条链接，以及 `[https://... 显示文字]`
+- `{| ... |}` 表格（表头、`rowspan`/`colspan`、caption、File 图片）
+- `<poem>`、`<nowiki>`、`<pre>`、`<syntaxhighlight>`、`<source>`、`<code>`、`<math>`、`<gallery>`
+- `<ref>...</ref>`、命名引用、`<references />`、`<br />`、`<center>`、`<blockquote>` 等扩展标签
+- `{{来源请求}}`、`{{主条目|...}}` 等常见模板的安全显示 fallback
+
+模板递归展开、Lua 模块、复杂参数解析和服务器端扩展不属于静态页面能力；未识别模板会以文本标记显示，不会执行任意代码。
 
 ## 两种运行方式
 
@@ -39,6 +54,8 @@ python local_server.py
 
 ## 重新构建
 
-当原始镜像发生变化时，可运行 `python build.py` 重新生成页面和附件，再运行 `python upgrade_site.py` 更新标签及录入日期元数据。
+当原始镜像发生变化时，可运行 `python build.py` 重新生成页面和附件，再运行 `python upgrade_site.py` 更新标签及录入日期元数据；如需再次把可转换的 HTML 词条转为源码，最后运行 `python convert_simple.py`。
+
+对于已有 HTML 词条，可运行 `python convert_simple.py`。脚本会把标题、段落、列表、链接、图片、粗斜体和简单表格转换为 MediaWiki 源码；复杂布局、视频、音频、脚本和超大页面会保留 HTML，并在 `metadata.json` 中标记为 `format: "html"`。
 
 项目不包含留言、评论区、讨论页或留言板。

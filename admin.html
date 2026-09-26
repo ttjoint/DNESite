@@ -1,71 +1,46 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="zh-CN">
- <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width,initial-scale=1" name="viewport"/>
-  <title>
-   管理 &middot; 中国人Wiki
-  </title>
-  <link href="style.css" rel="stylesheet"/>
-  <link href="admin.css" rel="stylesheet"/>
- </head>
- <body class="admin-page">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>管理 · 中国人Wiki</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body class="admin-page">
   <header class="site-header">
-   <a class="brand" href="index.html">
-    中国人Wiki
-   </a>
-   <span class="local-only">
-    本地管理模式
-   </span>
-   <a class="back" href="index.html">
-    返回网站
-   </a>
+    <a class="brand" href="index.html">中国人Wiki</a>
+    <span class="local-only">本地管理模式</span>
+    <a class="back" href="index.html">返回网站</a>
   </header>
-<main class="admin-wrap"><section class="media-upload"><h2>上传媒体</h2><input id="media-file" type="file" accept="image/*,video/*,audio/*"><button id="upload-media">上传到本地</button><span id="upload-status"></span></section>
-   <aside>
-    <h2>
-     词条管理
-    </h2>
-    <input id="admin-filter" placeholder="筛选词条"/>
-    <button id="new-entry">
-     + 新建词条
-    </button>
-    <div id="admin-list">
-    </div>
-   </aside>
-   <section class="editor">
-    <div class="editor-top">
-     <input id="title" placeholder="词条标题"/>
-     <input id="date" type="date"/>
-     <input id="tags" placeholder="标签，用逗号分隔"/>
-     <button id="save">
-      保存本地文件
-     </button>
-     <button class="danger" id="delete">
-      删除
-     </button>
-    </div>
-    <div class="editor-grid">
-     <div>
-      <label>
-       MediaWiki 源码
-      </label>
-      <textarea id="source" spellcheck="false"></textarea>
-     </div>
-     <div>
-      <label>
-       实时预览
-      </label>
-      <div class="article-body preview" id="preview">
+  <main class="admin-wrap">
+    <aside class="admin-sidebar">
+      <h2>词条管理</h2>
+      <input id="admin-filter" placeholder="筛选词条">
+      <button id="new-entry">+ 新建词条</button>
+      <div id="admin-list"></div>
+      <hr>
+      <h2>上传媒体</h2>
+      <input id="media-file" type="file" accept="image/*,video/*,audio/*">
+      <button id="upload-media">上传到本地</button>
+      <small id="upload-status"></small>
+    </aside>
+    <section class="editor">
+      <div class="editor-top">
+        <input id="title" placeholder="词条标题">
+        <input id="date" type="date">
+        <input id="tags" placeholder="标签，用逗号分隔">
+        <button id="save">保存本地文件</button>
+        <button id="delete" class="danger">删除</button>
       </div>
-     </div>
-    </div>
-    <p id="admin-status">
-    </p>
-   </section>
+      <div class="editor-grid">
+        <div><label for="source">MediaWiki 源码</label><textarea id="source" spellcheck="false"></textarea></div>
+        <div><label>实时预览</label><div id="preview" class="article-body preview"></div></div>
+      </div>
+      <p id="admin-status"></p>
+    </section>
   </main>
-  <script src="admin.js">
-  </script>
- </body>
+  <script src="admin.js"></script>
+  <script src="media-admin.js"></script>
+</body>
 </html>
-<script src="media-admin.js"></script>

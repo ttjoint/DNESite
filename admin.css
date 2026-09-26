@@ -23,6 +23,7 @@
   border-radius: 10px;
   padding: 18px;
 }
+.admin-sidebar { min-width: 0; }.admin-sidebar h2 { margin-top: 0; }.admin-sidebar hr { border: 0; border-top: 1px solid #dce2e8; margin: 20px 0; }.admin-sidebar small { display: block; color: #6b7785; margin-top: 8px; }
 .admin-wrap input, .editor-top input, .admin-wrap button, .editor-top button, .admin-wrap textarea {
   font: inherit;
 }

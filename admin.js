@@ -9,15 +9,25 @@
   }
   const escapeHtml = (value) => String(value || '').replace(/[&<>"']/g, (c) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
 
-  function preview(source) {
-    if (/<\/?[a-z][^>]*>/i.test(source || '')) return source;
-    let html = escapeHtml(source || '')
-      .replace(/^={2,6}\s*(.*?)\s*={2,6}$/gm, '<h2>$1</h2>')
-      .replace(/'''(.*?)'''/g, '<strong>$1</strong>')
-      .replace(/''(.*?)''/g, '<em>$1</em>')
-      .replace(/\[\[(?:File|文件):([^\]|]+)(?:\|[^\]]*)?\]\]/gi, '<span class="attachment">附件：$1</span>')
-      .replace(/\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g, (_, target, label) => `<a href="#">${label || target}</a>`);
-    return html.split(/\n\s*\n/).filter(Boolean).map((part) => `<p>${part.replace(/\n/g, '<br>')}</p>`).join('');
+  // Use the same Python renderer as static pages so preview and saved output
+  // handle references, tables, galleries, poems and links identically.
+  let previewRequest = 0;
+  async function preview(source, format = 'wiki') {
+    if (format === 'html') {
+      $('#preview').innerHTML = source || '<p class="empty">暂无内容</p>';
+      return;
+    }
+    const request = ++previewRequest;
+    try {
+      const result = await api('/api/render', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ source: source || '', prefix: '' }),
+      });
+      if (request === previewRequest) $('#preview').innerHTML = result.html || '<p></p>';
+    } catch (error) {
+      if (request === previewRequest) $('#preview').innerHTML = `<p class="empty">预览失败：${escapeHtml(error.message)}</p>`;
+    }
   }
 
   function collectForm() {
@@ -46,12 +56,12 @@
     state.current = item; state.dirty = false;
     $('#title').value = item.title || '未命名词条'; $('#date').value = item.date || '';
     $('#tags').value = (item.tags || []).join(','); $('#source').value = item.body || '';
-    $('#preview').innerHTML = preview(item.body || '');
+    preview(item.body || '', item.format || 'wiki');
   }
   function load(slug) { api('/api/entry?slug=' + encodeURIComponent(slug)).then((item) => item && item.title ? fill(item) : Promise.reject(new Error('词条详情加载失败'))).catch((error) => { $('#admin-status').textContent = error.message; }); }
   function refresh() { api('/api/entries').then((items) => { state.items = items.filter((item) => item.title); renderList(); if (!state.current && state.items[0]) load(state.items[0].slug); }); }
 
-  ['title', 'date', 'tags', 'source'].forEach((id) => $('#' + id).addEventListener('input', () => { state.dirty = true; if (id === 'source') $('#preview').innerHTML = preview($('#source').value); }));
+  ['title', 'date', 'tags', 'source'].forEach((id) => $('#' + id).addEventListener('input', () => { state.dirty = true; if (id === 'source') preview($('#source').value, state.current?.format || 'wiki'); }));
   $('#admin-filter').oninput = async () => { await saveDraft(true); renderList(); };
   $('#save').onclick = () => saveDraft(false).then(refresh);
   $('#delete').onclick = async () => { if (!state.current || !confirm('确认删除该词条？')) return; await saveDraft(true); await api('/api/delete', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ slug:state.current.slug }) }); state.current = null; refresh(); };
